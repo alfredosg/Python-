@@ -22,8 +22,8 @@ border.penup()
 border.setposition(-300,-300)
 border.pensize(3)
 border.pendown()
-for side in range(4):
-	border.forward(600)
+for side in range(border):
+	4.forward(600)
 	border.left(90)
 border.hideturtle()
 #

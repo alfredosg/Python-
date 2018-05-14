@@ -1,26 +1,28 @@
 import turtle as trt
 from math import sqrt
 import random
+import os
 #
 ## set screen
 sc = trt.Screen()
-sc.setup(800,800)
-sc.bgcolor("black")
+sc.setup(1200,800)
+sc.bgcolor("white")
 sc.title("Maze")
+sc.bgpic("Council3.png")
 sc.tracer(0)
 #
 ## images
-images = []
+images = ["rank.gif","TheCouncil.gif","Unfair.gif","windu.gif","wall.gif"]
 for image in images:
-	turtle.register_shape(image)
+	trt.register_shape(image)
 #
 ## creating a class
 #
 class Wh_Sq(trt.Turtle): #same properties as Turtle
 	def __init__(self):
 		trt.Turtle.__init__(self) #initialize Turtle
-		self.shape("square")
-		self.color("white")
+		self.shape("wall.gif")
+		self.color("black")
 		self.penup() #we don't want to draw
 		self.speed(0)
 #any Cosa has these properties	  
@@ -30,7 +32,7 @@ class Wh_Sq(trt.Turtle): #same properties as Turtle
 class Treasure(trt.Turtle):
 	def __init__(self,x,y):
 		trt.Turtle.__init__(self)
-		self.shape("square")
+		self.shape("TheCouncil.gif")
 		self.color("gold")
 		self.penup()
 		self.setheading(90)
@@ -44,13 +46,19 @@ class Treasure(trt.Turtle):
 class Enemy(trt.Turtle):
 	def __init__(self,x,y):
 		trt.Turtle.__init__(self)
-		self.shape("triangle")
+		self.shape("windu.gif")
 		self.color("red")
 		self.penup()
 		self.setheading(90)
 		self.speed(0)
 		self.goto(x,y)
 		self.direction = random.choice(["up","down","left","right"])
+	def isClose(self,x1):
+		distance =  sqrt((self.xcor()-x1.xcor())**2+(self.ycor()-x1.ycor())**2)
+		if distance < 72:
+			return True
+		else:
+			return False
 	def move(self):
 		if self.direction == "up":
 			dx = 0
@@ -77,7 +85,6 @@ class Enemy(trt.Turtle):
 				self.direction == "up"
 			elif player.ycor() < self.ycor:
 				self.direction == "down"
-
 #
 #
 		move_to_x = self.xcor()+dx
@@ -85,24 +92,19 @@ class Enemy(trt.Turtle):
 #
 #
 		if (move_to_x,move_to_y) not in walls:
+			self.isClose(player)
 			self.goto(move_to_x,move_to_y)
 		else:
-			self.direction = random.choice(["up","down","left","right"])
-#
+			self.isClose(player)
+			self.direction = random.choice(["up","down","left","right"])		
 		trt.ontimer(self.move,t=random.randint(100,300))
 #
-	def isClose(self,x1):
-		distance =  sqrt((self.xcor()-x1.xcor())**2+(self.ycor()-x1.ycor())**2)
-		if distance < 148:
-			return True
-		else:
-			return False
 #
 ## player
 class Player(trt.Turtle):
 	def __init__(self):
 		trt.Turtle.__init__(self)
-		self.shape("circle")
+		self.shape("Unfair.gif")
 		self.color("green")
 		self.penup()
 		self.speed(0)
@@ -229,7 +231,7 @@ while test:
 			test = False
 	for enemy in enemies:
 		if player.isCollision(enemy):
-			print "Game over"
+			os.system("aplay tas.wav&")
 			player.goto(ini_x,ini_y)
 			
 	
